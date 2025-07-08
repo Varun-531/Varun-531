@@ -2,8 +2,9 @@ name: 🔄 Update README Stats Timestamp
 
 on:
   schedule:
-    - cron: '0 */12 * * *'  # Runs every 12 hours
-  workflow_dispatch:        # Allows manual trigger from Actions tab
+    - cron: '0 */12 * * *'     # Every 12 hours
+  workflow_dispatch:           # Manual trigger via GitHub Actions tab
+  push:                        # Run on every commit to any branch
 
 jobs:
   update-readme:
