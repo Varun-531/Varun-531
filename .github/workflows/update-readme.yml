@@ -1,23 +1,26 @@
-# .github/workflows/update-readme.yml
-name: Update README
+name: 🔄 Update README Stats Timestamp
 
 on:
   schedule:
-    - cron: '0 */12 * * *'  # every 12 hours
-  workflow_dispatch:        # allow manual trigger
+    - cron: '0 */12 * * *'     # Every 12 hours
+  workflow_dispatch:           # Manual trigger via GitHub Actions tab
+  push:                        # Run on every commit to any branch
 
 jobs:
-  update:
+  update-readme:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Update README with timestamp
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Update timestamp in README
         run: |
           ts=$(date +%s)
-          sed -i "s/timestamp=[0-9]*/timestamp=$ts/" README.md
-      - name: Commit changes
+          sed -i "s/timestamp=[0-9]*/timestamp=$ts/g" README.md
+
+      - name: Commit & Push changes
         run: |
-          git config user.name 'GitHub Action'
-          git config user.email 'action@github.com'
-          git commit -am "Update README timestamp"
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git commit -am "🔄 Update README stats timestamp"
           git push
