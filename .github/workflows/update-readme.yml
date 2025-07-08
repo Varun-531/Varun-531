@@ -1,23 +1,30 @@
-# .github/workflows/update-readme.yml
 name: Update README
 
 on:
   schedule:
-    - cron:  '*/6 * * * *'  # every 6 mins
-  workflow_dispatch:        # allow manual trigger
+    - cron: '*/30 * * * *'  # every 30 minutes
+  workflow_dispatch:         # manual trigger option
 
 jobs:
   update:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
-      - name: Update README with timestamp
+
+      - name: Update timestamp in README
         run: |
-          ts=$(date +%s)
-          sed -i "s/timestamp=[0-9]*/timestamp=$ts/" README.md
-      - name: Commit changes
+          echo "Last updated on: $(date '+%Y-%m-%d %H:%M:%S')" > update-time.txt
+
+      - name: Configure Git
         run: |
-          git config user.name 'GitHub Action'
-          git config user.email 'action@github.com'
-          git commit -am "Update README timestamp"
-          git push
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+
+      - name: Commit and push if there are changes
+        run: |
+          git add .
+          git diff --cached --quiet && echo "✅ No changes to commit" || (
+            git commit -m "🔄 Auto-update: $(date '+%Y-%m-%d %H:%M:%S')"
+            git push
+          )
